@@ -1,0 +1,8 @@
+policy_id,category,policy_text
+1,Attendance,"Students must maintain at least 75% attendance to be eligible for exams."
+2,Attendance,"Attendance below 50% will lead to course failure."
+3,Grading,"Final grade is based on assignments (40%) and exams (60%)."
+4,Grading,"Students must score at least 40% to pass the course."
+5,AI Usage,"Students are allowed to use AI tools for learning but not during exams."
+6,AI Usage,"AI-generated content must be properly cited."
+7,Academic Integrity,"Plagiarism is strictly prohibited and will result in disciplinary action."
