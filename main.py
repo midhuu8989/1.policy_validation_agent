@@ -3,30 +3,78 @@ from extractor.clause_extractor import extract_clauses
 from validator.validator import validate_policies
 from report.report_generator import generate_report
 
-# Load data
-data = load_policies("data/policies.csv")
 
-# Query
-query = "attendance"
+def main():
+    # Load data
+    try:
+        data = load_policies("data/policies.csv")
+    except Exception as e:
+        print(f"Error loading policies: {e}")
+        return
 
-results = search_policies(data, query)
+    # Query
+    query = "attendance"
 
-print("\n=== SEARCH RESULTS ===\n")
-print(results["policy_text"])
+    # Search
+    try:
+        results = search_policies(data, query)
+    except Exception as e:
+        print(f"Error during search: {e}")
+        return
 
-# Extract clauses
-extracted = extract_clauses(results)
+    print("\n=== SEARCH RESULTS ===\n")
 
-print("\n=== EXTRACTED CLAUSES ===\n")
-for item in extracted:
-    print(item)
+    # Handle empty results
+    if not results:
+        print("No results found.")
+        return
 
-# Validate
-validation = validate_policies(extracted)
+    # Print results safely
+    if isinstance(results, dict) and "policy_text" in results:
+        print(results["policy_text"])
+    else:
+        print(results)
 
-print("\n=== VALIDATION RESULTS ===\n")
-for v in validation:
-    print(v)
-    report = generate_report(validation)
+    # Extract clauses
+    try:
+        extracted = extract_clauses(results)
+    except Exception as e:
+        print(f"Error extracting clauses: {e}")
+        return
 
-print(report)
+    print("\n=== EXTRACTED CLAUSES ===\n")
+    if not extracted:
+        print("No clauses extracted.")
+        return
+
+    for item in extracted:
+        print(item)
+
+    # Validate
+    try:
+        validation = validate_policies(extracted)
+    except Exception as e:
+        print(f"Error validating policies: {e}")
+        return
+
+    print("\n=== VALIDATION RESULTS ===\n")
+    if not validation:
+        print("No validation results.")
+        return
+
+    for v in validation:
+        print(v)
+
+    # Generate report (FIXED: outside loop)
+    try:
+        report = generate_report(validation)
+    except Exception as e:
+        print(f"Error generating report: {e}")
+        return
+
+    print("\n=== FINAL REPORT ===\n")
+    print(report)
+
+
+if __name__ == "__main__":
+    main()
